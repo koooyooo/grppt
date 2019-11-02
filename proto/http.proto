@@ -12,9 +12,8 @@ message HttpRequest {
     string version = 1;
     string method = 2;
     string url = 3;
-    map<string, Values> headers = 10;
-    map<string, Values> parameters = 20;
-    string body = 30;
+    map<string, Values> headers = 4;
+    string body = 5;
 }
 
 message HttpResponse {
