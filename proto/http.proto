@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package grppt;
+
+option go_package="grppt";
+
+message Values {
+    repeated string values = 1;
+}
+
+message HttpRequest {
+    string version = 1;
+    string method = 2;
+    string url = 3;
+    map<string, Values> headers = 10;
+    map<string, Values> parameters = 20;
+    string body = 30;
+}
+
+message HttpResponse {
+    string version = 1;
+    int32 statusCode = 2;
+    string reasonPhase = 3;
+    map<string, Values> headers = 4;
+    string body = 5;
+}
+
+service GrpptService {
+    rpc Do(HttpRequest) returns (HttpResponse) {};
+    rpc DoStream(stream HttpRequest) returns (stream HttpResponse) {};
+}
