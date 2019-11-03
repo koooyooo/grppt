@@ -54,16 +54,3 @@ func RunHttpClient(client pb.GrpptServiceClient, req *http.Request) (*http.Respo
 func RunClient(client pb.GrpptServiceClient, req *pb.Request) (*pb.Response, error) {
 	return client.Do(context.Background(), req)
 }
-
-// FIXME: Need to assign right Request / Response set using Hash.
-func RunStreamClient(client pb.GrpptServiceClient, req *pb.Request) (*pb.Response, error) {
-	stream, err := client.DoStream(context.Background())
-	if err != nil {
-		return nil, err
-	}
-	err = stream.Send(req)
-	if err != nil {
-		return nil, err
-	}
-	return stream.Recv()
-}
