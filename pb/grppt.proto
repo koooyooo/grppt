@@ -30,5 +30,4 @@ message Response {
 
 service GrpptService {
     rpc Do(Request) returns (Response) {};
-    rpc DoStream(stream Request) returns (stream Response) {};
 }

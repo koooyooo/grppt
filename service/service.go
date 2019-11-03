@@ -6,16 +6,17 @@ import (
 	"net/http"
 
 	"github.com/koooyooo/grppt/converter"
-
 	"github.com/koooyooo/grppt/pb"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type GrpptServiceServer struct{}
 
 func (*GrpptServiceServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, error) {
-	httpReq, err := converter.ConvertRequestPB2HTTP(req)
+	return baseFlow(req)
+}
+
+func baseFlow(request *pb.Request) (*pb.Response, error) {
+	httpReq, err := converter.ConvertRequestPB2HTTP(request)
 	fmt.Println(httpReq)
 	if err != nil {
 		return nil, err
@@ -27,10 +28,6 @@ func (*GrpptServiceServer) Do(ctx context.Context, req *pb.Request) (*pb.Respons
 	defer httpResp.Body.Close()
 	resp, err := converter.ConvertResponseHTTP2PB(httpResp)
 	return resp, err
-}
-
-func (*GrpptServiceServer) DoStream(srv pb.GrpptService_DoStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method DoStream not implemented")
 }
 
 func callBackend(req *http.Request) (*http.Response, error) {

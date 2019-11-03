@@ -31,8 +31,7 @@ func ConvertRequestPB2HTTP(req *pb.Request) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
-	reqBodyBytes := []byte(req.Body)
-	reqBodyStream := ioutil.NopCloser(bytes.NewReader(reqBodyBytes))
+	reqBodyStream := ioutil.NopCloser(bytes.NewReader(req.Body))
 	return &http.Request{
 		Proto:      req.Proto,
 		ProtoMajor: int(req.ProtoMajor),
@@ -44,7 +43,7 @@ func ConvertRequestPB2HTTP(req *pb.Request) (*http.Request, error) {
 		GetBody: func() (io.ReadCloser, error) {
 			return reqBodyStream, nil
 		},
-		ContentLength:    int64(len(reqBodyBytes)),
+		ContentLength:    int64(len(req.Body)),
 		TransferEncoding: []string{},
 		Close:            false,
 	}, nil
@@ -77,6 +76,7 @@ func ConvertResponsePB2HTTP(res *pb.Response) (*http.Response, error) {
 		Body:       ioutil.NopCloser(bytes.NewReader(res.Body)),
 	}, nil
 }
+
 func toMap(valuesMap map[string]*pb.Values) map[string][]string {
 	m := map[string][]string{}
 	for k, v := range valuesMap {
