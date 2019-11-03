@@ -2,8 +2,11 @@
 
 cd $(dirname $0)
 
-if [ ! -e "../client" ]; then
-  go build -o ../client ../cmd/client.go
+NAME="grppt_client"
+
+if [ ! -e "../${NAME}" ]; then
+  echo "build"
+  go build -o ../${NAME} ../cmd/client.go
 fi
 
-../client
+../${NAME}

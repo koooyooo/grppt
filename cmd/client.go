@@ -6,19 +6,11 @@ import (
 	"log"
 
 	"github.com/koooyooo/grppt/pb"
-
 	"google.golang.org/grpc"
 )
 
 func main() {
 	fmt.Println("Run Client")
-	conn, err := grpc.Dial("localhost:5051", grpc.WithInsecure())
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
-
-	client := pb.NewGrpptServiceClient(conn)
 	req := &pb.Request{
 		Proto:      "HTTP",
 		ProtoMajor: 1,
@@ -28,12 +20,22 @@ func main() {
 		Headers: map[string]*pb.Values{
 			"hello": {Values: []string{"world", "baby"}},
 		},
-		Body: "Hello Body",
+		Body: []byte("Hello Body"),
 	}
-	resp, err := client.Do(context.Background(), req)
+	resp, err := RunClient(req)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(resp.StatusCode)
-	fmt.Println(resp.Body)
+	fmt.Println(string(resp.Body))
+}
+
+func RunClient(req *pb.Request) (*pb.Response, error) {
+	conn, err := grpc.Dial("localhost:5051", grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+	client := pb.NewGrpptServiceClient(conn)
+	return client.Do(context.Background(), req)
 }

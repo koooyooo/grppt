@@ -10,6 +10,22 @@ import (
 	"github.com/koooyooo/grppt/pb"
 )
 
+func ConvertRequestHTTP2PB(req *http.Request) (*pb.Request, error) {
+	bodyBytes, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.Request{
+		Proto:      req.Proto,
+		ProtoMajor: int32(req.ProtoMajor),
+		ProtoMinor: int32(req.ProtoMinor),
+		Method:     req.Method,
+		Url:        req.URL.String(),
+		Headers:    toValuesMap(req.Header),
+		Body:       bodyBytes,
+	}, nil
+}
+
 func ConvertRequestPB2HTTP(req *pb.Request) (*http.Request, error) {
 	url, err := url.Parse(req.Url)
 	if err != nil {
@@ -46,7 +62,7 @@ func ConvertResponseHTTP2PB(res *http.Response) (*pb.Response, error) {
 		StatusCode:  int32(res.StatusCode),
 		ReasonPhase: res.Status,
 		Headers:     toValuesMap(res.Header),
-		Body:        string(respBodyBytes),
+		Body:        respBodyBytes,
 	}, nil
 }
 

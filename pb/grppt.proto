@@ -15,7 +15,7 @@ message Request {
     string method = 4;
     string url = 5;
     map<string, Values> headers = 6;
-    string body = 7;
+    bytes body = 7;
 }
 
 message Response {
@@ -25,7 +25,7 @@ message Response {
     int32 statusCode = 4;
     string reasonPhase = 5;
     map<string, Values> headers = 6;
-    string body = 7;
+    bytes body = 7;
 }
 
 service GrpptService {
