@@ -35,16 +35,17 @@ func clientCall(req *pb.HttpRequest) (*pb.HttpResponse, error) {
 		return nil, err
 	}
 	reqBodyBytes := []byte(req.Body)
+	reqBodyStream := ioutil.NopCloser(bytes.NewReader(reqBodyBytes))
 	httpReq := http.Request{
+		Proto:      req.Proto,
+		ProtoMajor: int(req.ProtoMajor),
+		ProtoMinor: int(req.ProtoMinor),
 		Method:     req.Method,
 		URL:        url,
-		Proto:      "HTTP",
-		ProtoMajor: 1,
-		ProtoMinor: 1,
 		Header:     toMap(req.Headers),
-		Body:       ioutil.NopCloser(bytes.NewReader(reqBodyBytes)),
+		Body:       reqBodyStream,
 		GetBody: func() (io.ReadCloser, error) {
-			return ioutil.NopCloser(bytes.NewReader(reqBodyBytes)), nil
+			return reqBodyStream, nil
 		},
 		ContentLength:    int64(len(reqBodyBytes)),
 		TransferEncoding: []string{},
@@ -63,6 +64,9 @@ func clientCall(req *pb.HttpRequest) (*pb.HttpResponse, error) {
 		return nil, err
 	}
 	return &pb.HttpResponse{
+		Proto:       "HTTP",
+		ProtoMajor:  1,
+		ProtoMinor:  1,
 		StatusCode:  int32(res.StatusCode),
 		ReasonPhase: res.Status,
 		Headers:     toValuesMap(res.Header),

@@ -9,19 +9,23 @@ message Values {
 }
 
 message HttpRequest {
-    string version = 1;
-    string method = 2;
-    string url = 3;
-    map<string, Values> headers = 4;
-    string body = 5;
+    string proto = 1;
+    int32 protoMajor = 2;
+    int32 protoMinor = 3;
+    string method = 4;
+    string url = 5;
+    map<string, Values> headers = 6;
+    string body = 7;
 }
 
 message HttpResponse {
-    string version = 1;
-    int32 statusCode = 2;
-    string reasonPhase = 3;
-    map<string, Values> headers = 4;
-    string body = 5;
+    string proto = 1;
+    int32 protoMajor = 2;
+    int32 protoMinor = 3;
+    int32 statusCode = 4;
+    string reasonPhase = 5;
+    map<string, Values> headers = 6;
+    string body = 7;
 }
 
 service GrpptService {

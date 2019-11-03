@@ -2,8 +2,10 @@
 
 cd $(dirname $0)
 
-if [ ! -e "../server" ]; then
-  go build -o ../server ../cmd/server.go
-fi
+#if [ ! -e "../server" ]; then
+#  go build -o ../server ../cmd/server.go
+#fi
+#
+#../server
 
-../server
+go run ../cmd/server.go
