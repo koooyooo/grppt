@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/koooyooo/grppt/converter"
 
@@ -14,12 +15,13 @@ import (
 
 func main() {
 	fmt.Println("Run Client")
-	conn, err := grpc.Dial("localhost:5051", grpc.WithInsecure())
+	st := time.Now()
+	conn, client, err := CreateClient()
+	md := time.Now()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer conn.Close()
-	client := pb.NewGrpptServiceClient(conn)
 	req := &pb.Request{
 		Proto:      "HTTP",
 		ProtoMajor: 1,
@@ -31,20 +33,32 @@ func main() {
 		},
 		Body: []byte("Hello Body"),
 	}
-	resp, err := RunClient(client, req)
+	resp, err := RunClient(*client, req)
 	if err != nil {
 		log.Fatal(err)
 	}
+	ed := time.Now()
 	fmt.Println(resp.StatusCode)
+	fmt.Println(resp.Headers)
 	fmt.Println(string(resp.Body))
+	fmt.Println("total", ed.Sub(st).Milliseconds(), "dialing", md.Sub(st).Milliseconds())
 }
 
-func RunHttpClient(client pb.GrpptServiceClient, req *http.Request) (*http.Response, error) {
+func CreateClient() (*grpc.ClientConn, *pb.GrpptServiceClient, error) {
+	conn, err := grpc.Dial("localhost:5051", grpc.WithInsecure())
+	if err != nil {
+		return nil, nil, err
+	}
+	client := pb.NewGrpptServiceClient(conn)
+	return conn, &client, nil
+}
+
+func RunHttpClient(client *pb.GrpptServiceClient, req *http.Request) (*http.Response, error) {
 	pbReq, err := converter.ConvertRequestHTTP2PB(req)
 	if err != nil {
 		return nil, err
 	}
-	pbResp, err := RunClient(client, pbReq)
+	pbResp, err := RunClient(*client, pbReq)
 	if err != nil {
 		return nil, err
 	}

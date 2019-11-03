@@ -2,6 +2,7 @@ package converter
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -54,6 +55,7 @@ func ConvertResponseHTTP2PB(res *http.Response) (*pb.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("!!!", res.Header)
 	return &pb.Response{
 		Proto:       res.Proto,
 		ProtoMajor:  int32(res.ProtoMajor),
