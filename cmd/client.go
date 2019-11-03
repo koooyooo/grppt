@@ -21,6 +21,12 @@ func main() {
 	client := pb.NewGrpptServiceClient(conn)
 	req := &pb.HttpRequest{
 		Version: "1.1",
+		Method:  "GET",
+		Url:     "https://httpbin.org/get",
+		Headers: map[string]*pb.Values{
+			"hello": {Values: []string{"world", "baby"}},
+		},
 	}
-	client.Do(context.Background(), req)
+	resp, err := client.Do(context.Background(), req)
+	fmt.Println(resp.Body)
 }
