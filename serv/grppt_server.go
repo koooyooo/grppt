@@ -14,29 +14,29 @@ import (
 
 type GrpptServiceServer struct{}
 
-func (*GrpptServiceServer) Do(ctx context.Context, req *pb.HttpRequest) (*pb.HttpResponse, error) {
-	fmt.Println("receive request")
-	resp, err := clientCall(req)
+func (*GrpptServiceServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, error) {
+	httpReq, err := converter.ConvertRequestPB2HTTP(req)
+	fmt.Println(httpReq)
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	httpResp, err := callBackend(httpReq)
+	defer httpResp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+	return converter.ConvertResponseHTTP2PB(httpResp)
 }
 
 func (*GrpptServiceServer) DoStream(srv pb.GrpptService_DoStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method DoStream not implemented")
 }
 
-func clientCall(req *pb.HttpRequest) (*pb.HttpResponse, error) {
-	httpReq, err := converter.ConvertRequestPB2HTTP(req)
-	if err != nil {
-		return nil, err
-	}
+func callBackend(req *http.Request) (*http.Response, error) {
 	client := &http.Client{}
-	res, err := client.Do(httpReq)
+	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
-	return converter.ConvertResponseHTTP2PB(res)
+	return res, nil
 }

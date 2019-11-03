@@ -8,7 +8,7 @@ message Values {
     repeated string values = 1;
 }
 
-message HttpRequest {
+message Request {
     string proto = 1;
     int32 protoMajor = 2;
     int32 protoMinor = 3;
@@ -18,7 +18,7 @@ message HttpRequest {
     string body = 7;
 }
 
-message HttpResponse {
+message Response {
     string proto = 1;
     int32 protoMajor = 2;
     int32 protoMinor = 3;
@@ -29,6 +29,6 @@ message HttpResponse {
 }
 
 service GrpptService {
-    rpc Do(HttpRequest) returns (HttpResponse) {};
-    rpc DoStream(stream HttpRequest) returns (stream HttpResponse) {};
+    rpc Do(Request) returns (Response) {};
+    rpc DoStream(stream Request) returns (stream Response) {};
 }
