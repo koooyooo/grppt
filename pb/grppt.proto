@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package grppt;
+package pb;
 
-option go_package="grppt";
+option go_package="pb";
 
 message Values {
     repeated string values = 1;
