@@ -56,9 +56,9 @@ func ConvertResponseHTTP2PB(res *http.Response) (*pb.Response, error) {
 		return nil, err
 	}
 	return &pb.Response{
-		Proto:       "HTTP",
-		ProtoMajor:  1,
-		ProtoMinor:  1,
+		Proto:       res.Proto,
+		ProtoMajor:  int32(res.ProtoMajor),
+		ProtoMinor:  int32(res.ProtoMajor),
 		StatusCode:  int32(res.StatusCode),
 		ReasonPhase: res.Status,
 		Headers:     toValuesMap(res.Header),
@@ -66,6 +66,17 @@ func ConvertResponseHTTP2PB(res *http.Response) (*pb.Response, error) {
 	}, nil
 }
 
+func ConvertResponsePB2HTTP(res *pb.Response) (*http.Response, error) {
+	return &http.Response{
+		Proto:      "HTTP",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		StatusCode: int(res.StatusCode),
+		Status:     res.ReasonPhase,
+		Header:     toMap(res.Headers),
+		Body:       ioutil.NopCloser(bytes.NewReader(res.Body)),
+	}, nil
+}
 func toMap(valuesMap map[string]*pb.Values) map[string][]string {
 	m := map[string][]string{}
 	for k, v := range valuesMap {

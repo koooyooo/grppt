@@ -21,11 +21,12 @@ func (*GrpptServiceServer) Do(ctx context.Context, req *pb.Request) (*pb.Respons
 		return nil, err
 	}
 	httpResp, err := callBackend(httpReq)
-	defer httpResp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
-	return converter.ConvertResponseHTTP2PB(httpResp)
+	defer httpResp.Body.Close()
+	resp, err := converter.ConvertResponseHTTP2PB(httpResp)
+	return resp, err
 }
 
 func (*GrpptServiceServer) DoStream(srv pb.GrpptService_DoStreamServer) error {
