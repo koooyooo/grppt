@@ -1,2 +1,2 @@
 # grppt
-grppt is grpc pipeline with http endpoints
+grppt is grpc pipeline located between http endpoints and http backends.
