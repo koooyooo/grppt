@@ -5,8 +5,8 @@ import (
 	"log"
 	"net"
 
+	"github.com/koooyooo/grppt/core/server"
 	"github.com/koooyooo/grppt/pb"
-	"github.com/koooyooo/grppt/service"
 
 	"google.golang.org/grpc"
 )
@@ -22,7 +22,7 @@ func RunServer() {
 		log.Fatal(err)
 	}
 	grpcServ := grpc.NewServer()
-	pb.RegisterGrpptServiceServer(grpcServ, &service.GrpptServiceServer{})
+	pb.RegisterGrpptServiceServer(grpcServ, &server.GrpptServiceServer{})
 
 	if err := grpcServ.Serve(listener); err != nil {
 		log.Fatal(err)

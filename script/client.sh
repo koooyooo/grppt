@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-NAME="grppt_client"
+NAME="client"
 
 if [ ! -e "../${NAME}" ]; then
   echo "build"

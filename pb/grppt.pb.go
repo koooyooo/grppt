@@ -6,11 +6,12 @@ package pb
 import (
 	context "context"
 	fmt "fmt"
+	math "math"
+
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -280,7 +281,7 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// GrpptServiceClient is the client API for GrpptService service.
+// GrpptServiceClient is the client API for GrpptService server.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type GrpptServiceClient interface {
@@ -304,7 +305,7 @@ func (c *grpptServiceClient) Do(ctx context.Context, in *Request, opts ...grpc.C
 	return out, nil
 }
 
-// GrpptServiceServer is the server API for GrpptService service.
+// GrpptServiceServer is the server API for GrpptService server.
 type GrpptServiceServer interface {
 	Do(context.Context, *Request) (*Response, error)
 }
