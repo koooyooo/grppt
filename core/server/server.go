@@ -37,10 +37,10 @@ func callBackend(req *http.Request) (*http.Response, error) {
 	client := &http.Client{}
 	st := time.Now()
 	res, err := client.Do(req)
-	ed := time.Now()
-	res.Header.Add("X-Grppt-Latency-Server-Backend-Call", strconv.Itoa(int(ed.Sub(st).Milliseconds())))
 	if err != nil {
 		return nil, err
 	}
+	ed := time.Now()
+	res.Header.Add("X-Grppt-Latency-Server-Backend-Call", strconv.Itoa(int(ed.Sub(st).Milliseconds())))
 	return res, nil
 }

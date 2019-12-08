@@ -13,11 +13,11 @@ import (
 
 func main() {
 	fmt.Println("start Server")
-	RunServer()
+	RunServer("tcp", "0.0.0.0:5051")
 }
 
-func RunServer() {
-	listener, err := net.Listen("tcp", "0.0.0.0:5051")
+func RunServer(network, address string) {
+	listener, err := net.Listen(network, address)
 	if err != nil {
 		log.Fatal(err)
 	}
